@@ -2,8 +2,15 @@
 //@router GET /api/contacts
 //@access public
 
-const getContact=(req,res)=>{
+const getContacts=(req,res)=>{
     res.status(200).json({message:"Get all contacts"});
+};
+
+//@desc Get a contact with id
+//@router POST /api/contacts/;id
+//@access public
+const getContact = (req,res)=>{
+    res.status(200).json({message:`Get contact with id : ${req.params.id}`});
 };
 
 //@desc Create new contact
@@ -26,4 +33,4 @@ const deleteContact = (req,res)=>{
     res.status(200).json({message:`Delete contact ${req.params.id}`});
 };
 
-module.exports={ getContact, createContact , updateContact, deleteContact};
+module.exports={ getContacts, getContact, createContact , updateContact, deleteContact};
