@@ -15,6 +15,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const userAvailable = await User.findOne({ email });
     if (userAvailable) {
       res.status(400);
+      console.log("user already exists")
       throw new Error("User already registered!");
     }
   
@@ -46,7 +47,7 @@ const loginUser = asyncHandler(async (req, res) => {
       res.status(400);
       throw new Error("All fields are mandatory!");
     }
-    const user = await User.findOne({ email });
+    const user = await User.findOne( { email });
     //compare password with hashedpassword
     if (user && (await bcrypt.compare(password, user.password))) {
       const accessToken = jwt.sign(
@@ -57,14 +58,22 @@ const loginUser = asyncHandler(async (req, res) => {
             id: user.id,
           },
         },
-        process.env.ACCESS_TOKEN_SECERT,
-        { expiresIn: "10m" }
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "5m" }
       );
       res.status(200).json({ accessToken });
-    } else {
+    } 
+    else {
       res.status(401);
       throw new Error("email or password is not valid");
     }
   });
 
-  module.exports = { registerUser , loginUser};
+//@desc Current user info
+//@route POST /api/users/current
+//@access private
+const currentUser = asyncHandler(async (req, res) => {
+    res.json(req.user);
+  });
+
+  module.exports = { registerUser , loginUser , currentUser};
